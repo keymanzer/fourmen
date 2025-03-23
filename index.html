@@ -21,6 +21,11 @@
     />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+    <!-- 카카오 맵 api -->
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c5bcf299a7ffd489564f5f5f8f3c0b3b"
+    ></script>
   </head>
   <body id="page-top">
     <!-- Navigation-->
@@ -164,19 +169,22 @@
       </div>
     </section>
     <!-- Map 카카오맵 들어가는 자리 -->
-    <div class="map" id="contact">
-      <!-- 카카오 api로 대체 -->
-      <iframe
-        src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"
-      ></iframe>
-      <br />
-      <small
-        ><a
-          href="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A"
-        ></a
-      ></small>
-      <!-- 여기까지 카카오 지도 -->
-    </div>
+    <div class="map" id="contact"></div>
+    <script type="text/javascript">
+      var container = document.getElementById("contact");
+      var options = {
+        center: new kakao.maps.LatLng(37.577816, 126.99811),
+        level: 3,
+      };
+      var map = new kakao.maps.Map(container, options);
+      // 🔹 줌 컨트롤 추가
+      var zoomControl = new kakao.maps.ZoomControl();
+      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+      // 🔹 지도 이동 & 확대/축소 가능하도록 설정
+      map.setDraggable(true);
+      map.setZoomable(true);
+    </script>
     <!-- Footer-->
     <footer class="footer text-center">
       <div class="container px-4 px-lg-5">
