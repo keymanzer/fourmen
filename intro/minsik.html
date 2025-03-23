@@ -1,11 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>김민식 - 개인 소개</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      header {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+
+      header h1 {
+        margin-bottom: 5px;
+      }
+
+      header img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 10px 0;
+      }
+
+      header a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .card {
+        background: #ffffff;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        color: #444;
+        margin-bottom: 10px;
+      }
+
+      ul {
+        padding-left: 20px;
+      }
+
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
-    <h2>hello</h2>
+    <div class="container">
+      <header>
+        <h1>김민식</h1>
+        <p>27살 | 서울특별시 광진구</p>
+        <p>
+          <a href="https://github.com/minsik99" target="_blank"
+            >GitHub 바로가기</a
+          >
+        </p>
+      </header>
+
+      <section class="card">
+        <h2>🎓 학력사항</h2>
+        <p><b>가천대학교 전자공학과 졸업</b></p>
+        <p>총 학점: 3.4 / 4.5</p>
+      </section>
+
+      <section class="card">
+        <h2>🛠 스택</h2>
+        <p>
+          Java, Spring, Spring Boot, JavaScript, Python, React, AWS, JPA, MQTT
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>📜 자격증</h2>
+        <p>정보처리기사 (2024.06.18 취득)</p>
+        <p>SQLD (2024.04.05 취득)</p>
+      </section>
+
+      <section class="card">
+        <h2>🔠 공인 영어 성적</h2>
+        <p>토익 스피킹 AL / 160 (2024.09.10 취득)</p>
+      </section>
+
+      <section class="card">
+        <h2>🏅 수상이력</h2>
+        <p>디지털 헬스 케어 프로젝트 창의상 수상</p>
+      </section>
+
+      <section class="card">
+        <h2>📌 목표</h2>
+        <ul>
+          <li>신입의 역할을 충분히 해내는 개발자로 성장</li>
+          <li>프로젝트 팀원들과 협력</li>
+          <li>CS 공부</li>
+          <li>알고리즘 1일 1문제</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>📂 프로젝트</h2>
+        <h3>1️⃣ NAIN</h3>
+        <p>사용자 맞춤 모의 면접 환경 및 커뮤니티 기능 제공</p>
+        <p>
+          <b>GitHub:</b>
+          <a href="https://github.com/NainProject" target="_blank"
+            >NainProject</a
+          >
+        </p>
+
+        <h3>2️⃣ GetDrive</h3>
+        <p>드라이브 기반 안정적인 파일 관리 시스템 및 협업 기능 제공</p>
+        <p>
+          <b>GitHub:</b>
+          <a href="https://github.com/minsik99/getdrive1.0" target="_blank"
+            >GetDrive</a
+          >
+        </p>
+      </section>
+    </div>
   </body>
 </html>
