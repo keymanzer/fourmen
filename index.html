@@ -184,6 +184,26 @@
       // 🔹 지도 이동 & 확대/축소 가능하도록 설정
       map.setDraggable(true);
       map.setZoomable(true);
+
+      // 🔹 현재 위치 가져와서 지도 중심 이동 + 마커 추가
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude; // 위도
+          var lon = position.coords.longitude; // 경도
+          var currentPos = new kakao.maps.LatLng(lat, lon);
+
+          // 지도 중심 이동
+          map.setCenter(currentPos);
+
+          // 현재 위치에 마커 추가
+          var marker = new kakao.maps.Marker({
+            position: currentPos,
+          });
+          marker.setMap(map);
+        });
+      } else {
+        alert("현재 위치를 지원하지 않는 브라우저입니다.");
+      }
     </script>
     <!-- Footer-->
     <footer class="footer text-center">
