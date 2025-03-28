@@ -3,7 +3,103 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>음악 재생</title>
+    <style>
+      /* 전체 페이지 스타일 */
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .audio-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      /* 각 오디오 카드 스타일 */
+      .audio-card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        width: 80%;
+        max-width: 500px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .audio-card h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      /* 오디오 태그 스타일 */
+      audio {
+        width: 100%;
+        border-radius: 8px;
+        outline: none;
+        background-color: #f5f5f5;
+      }
+
+      /* 플레이어 구분선 */
+      .divider {
+        margin: 20px 0;
+        border-top: 1px solid #e0e0e0;
+        width: 100%;
+      }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <div class="audio-container">
+      <!-- 첫 번째 오디오 카드 -->
+      <div class="audio-card">
+        <h3>Achachak - First Movement</h3>
+        <audio controls>
+          <source
+            src="../assets/img/Achachak - First Movement.mp3"
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <!-- 구분선 -->
+      <div class="divider"></div>
+
+      <!-- 두 번째 오디오 카드 -->
+      <div class="audio-card">
+        <h3>Achachak - Second Movement</h3>
+        <audio controls>
+          <source
+            src="../assets/img/Achachak - Second Movement.mp3"
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <!-- 구분선 -->
+      <div class="divider"></div>
+
+      <!-- 세 번째 오디오 카드 -->
+      <div class="audio-card">
+        <h3>Achachak - Third Movement</h3>
+        <audio controls>
+          <source
+            src="../assets/img/Achachak - Third Movement.mp3"
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    </div>
+  </body>
 </html>
