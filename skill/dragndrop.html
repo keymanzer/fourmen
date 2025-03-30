@@ -1,9 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body></body>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>드래그 앤 드롭 기능 추가</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: skyblue;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .landscape {
+      position: relative;
+      width: 100%;
+      height: 100%; /* 전체 높이를 100%로 설정 */
+    }
+
+    /* 평평한 땅 (갈색 땅을 맨 밑으로 내리기) */
+    .flat-ground {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      background-color: #C4A484; /* 평평한 땅 색 */
+    }
+
+    /* 드래그할 수 있는 상자 스타일 */
+    #dragBox {
+      width: 50px;
+      height: 30px;
+      background-color: brown;
+      cursor: pointer;
+      position: absolute;
+      bottom: 50px;
+      left: 30%;
+    }
+
+    #grandMother {
+      width: 70px;
+      height: 90px;
+      cursor: pointer;
+      position: absolute;
+      bottom: 50px;
+      left: 25%;
+    }
+
+    /* 집 본체 (상자 드롭 위치) */
+    #house {
+      position: absolute;
+      bottom: 50px; /* 평평한 땅 위에 배치 */
+      right: 50px;
+      width: 100px;
+      height: 100px;
+      background-color: #A9A9A9;
+    }
+
+    /* 삼각형 지붕 */
+    #roof {
+      position: absolute;
+      bottom: 100px;
+      width: 100px;
+      height: 100px;
+      background-color: #696969;
+      clip-path: polygon(0% 100%, 50% 60%, 100% 100%);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="landscape">
+    <h2> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
+    <!-- 평평한 땅 -->
+    <div class="flat-ground"></div>
+
+    <!-- 할머니 -->
+    <img id="grandMother" src="/assets/img/grandmother.png" alt="Grandmother Image" />
+
+    <!-- 드래그할 수 있는 상자 -->
+    <div id="dragBox" draggable="true" ondragstart="dragstartHandler(event)"></div>
+
+    <!-- 집 본체 -->
+    <div id="house" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
+      <!-- 삼각형 지붕 -->
+      <div id="roof"></div>
+    </div>
+
+    <!-- 드래그 앤 드롭 가능한 영역 (평평한 땅의 오른쪽 끝) -->
+    <div id="house" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+  </div>
+
+  <script>
+    // 드래그 시작 시 데이터 설정
+    function dragstartHandler(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    // 드래그 중에 기본 동작을 허용
+    function dragoverHandler(ev) {
+      ev.preventDefault();
+    }
+
+    // 드래그 종료 시 상자를 드롭 영역으로 이동
+    function dropHandler(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const draggedElement = document.getElementById(data);
+
+      // 드롭된 영역의 위치를 가져오기
+      const dropZone = ev.target;
+      const dropZoneRect = dropZone.getBoundingClientRect();
+
+      // 상자 위치를 집 본체 중앙에 배치
+      draggedElement.style.position = "absolute";
+      draggedElement.style.left = dropZoneRect.left + (dropZoneRect.width / 2) - (draggedElement.offsetWidth / 2) + "px";
+      draggedElement.style.top = dropZoneRect.top - draggedElement.offsetHeight + "px";
+
+      // 상자를 드롭된 영역 안으로 이동
+      dropZone.appendChild(draggedElement);
+    }
+  </script>
+</body>
 </html>
