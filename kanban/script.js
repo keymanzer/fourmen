@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+  loadFromLocalStorage(); // 로컬스토리지에서 불러오기
+
   const columns = document.querySelectorAll(".kanban-column");
 
   columns.forEach((column) => {
@@ -6,92 +8,164 @@ document.addEventListener("DOMContentLoaded", function () {
       group: "kanban",
       animation: 150,
       draggable: ".kanban-item",
-      handle: ".kanban-item", // 드래그 핸들
+      handle: ".kanban-item",
+      onEnd: saveToLocalStorage, // 드래그 후 저장
     });
   });
 
-  // 초기 아이템에 삭제 버튼 이벤트 리스너
+  // 기존 아이템 이벤트 설정
   setupDeleteButtons();
-
-  // 체크박스 이벤트 리스너
-  document.querySelectorAll(".checkbox").forEach((checkbox) => {
-    checkbox.addEventListener("change", function () {
-      const item = checkbox.closest(".kanban-item");
-      if (checkbox.checked) {
-        item.classList.add("checked"); // 체크된 항목에 줄 긋기
-      } else {
-        item.classList.remove("checked"); // 체크 해제 시 줄 제거
-      }
-    });
-  });
+  setupAllCheckboxes();
 });
 
-// 아이템 추가 함수 (모달에서 호출)
+// 모달 열기
 function openModal(columnId) {
   document.getElementById("modal").style.display = "flex";
   document.getElementById("modal-input").setAttribute("data-column", columnId);
 }
 
+// 모달 닫기
 function closeModal() {
   document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-input").value = "";
 }
 
-// 모달 외부 클릭 시 모달 닫기
+// 모달 바깥 클릭 시 닫기
 document.getElementById("modal").addEventListener("click", function (e) {
   if (e.target === document.getElementById("modal")) {
     closeModal();
   }
 });
 
+// 모달에서 아이템 추가
 function addItemFromModal() {
   const columnId = document
     .getElementById("modal-input")
     .getAttribute("data-column");
   const itemText = document.getElementById("modal-input").value.trim();
 
-  // 유효성 검사: 빈 문자열로 아이템 추가 방지
   if (!itemText) {
     alert("아이템을 입력해주세요!");
     return;
   }
 
-  const newItem = document.createElement("div");
-  newItem.classList.add("kanban-item");
-  newItem.innerHTML = `<input type="checkbox" class="checkbox"> ${itemText} <button class="delete-btn">삭제</button>`;
-
-  // 새 아이템에 삭제 버튼 이벤트 리스너와 체크박스 이벤트 리스너를 추가
-  setupDeleteButtons(newItem);
-  setupCheckbox(newItem);
-
+  const newItem = createKanbanItem(itemText);
   document.getElementById(columnId).appendChild(newItem);
+  saveToLocalStorage();
   closeModal();
 }
 
-// 삭제 버튼 이벤트 리스너를 설정하는 함수
+// 아이템 생성 함수
+function createKanbanItem(text, checked = false) {
+  const newItem = document.createElement("div");
+  newItem.classList.add("kanban-item");
+  newItem.innerHTML = `<input type="checkbox" class="checkbox" ${
+    checked ? "checked" : ""
+  }> ${text} <button class="delete-btn">삭제</button>`;
+
+  if (checked) {
+    newItem.classList.add("checked");
+  }
+
+  setupDeleteButtons(newItem);
+  setupCheckbox(newItem);
+
+  return newItem;
+}
+
+// 삭제 버튼 설정
 function setupDeleteButtons(item = null) {
   const items = item ? [item] : document.querySelectorAll(".kanban-item");
+
   items.forEach((item) => {
     const deleteBtn = item.querySelector(".delete-btn");
+
     item.addEventListener("mouseenter", function () {
-      deleteBtn.style.display = "inline-block"; // 마우스가 올라오면 삭제 버튼 보이기
+      deleteBtn.style.display = "inline-block";
     });
+
     item.addEventListener("mouseleave", function () {
-      deleteBtn.style.display = "none"; // 마우스가 벗어나면 삭제 버튼 숨기기
+      deleteBtn.style.display = "none";
     });
+
     deleteBtn.addEventListener("click", function () {
       item.remove();
+      saveToLocalStorage();
     });
   });
 }
 
-// 체크박스 이벤트 리스너를 설정하는 함수
+// 체크박스 설정
 function setupCheckbox(item) {
   const checkbox = item.querySelector(".checkbox");
+
   checkbox.addEventListener("change", function () {
     if (checkbox.checked) {
-      item.classList.add("checked"); // 체크된 항목에 줄 긋기
+      item.classList.add("checked");
     } else {
-      item.classList.remove("checked"); // 체크 해제 시 줄 제거
+      item.classList.remove("checked");
     }
+    saveToLocalStorage();
+  });
+}
+
+// 모든 기존 체크박스에 이벤트 추가
+function setupAllCheckboxes() {
+  document.querySelectorAll(".kanban-item").forEach((item) => {
+    setupCheckbox(item);
+  });
+}
+
+// 로컬스토리지에 저장
+function saveToLocalStorage() {
+  const data = {};
+
+  document.querySelectorAll(".kanban-column").forEach((column) => {
+    const columnId = column.id;
+    const items = [];
+
+    column.querySelectorAll(".kanban-item").forEach((item) => {
+      const checkbox = item.querySelector(".checkbox");
+      const text = item.childNodes[1].textContent.trim();
+      items.push({
+        text: text,
+        checked: checkbox.checked,
+      });
+    });
+
+    data[columnId] = items;
+  });
+
+  localStorage.setItem("kanbanData", JSON.stringify(data));
+}
+
+// 로컬스토리지에서 불러오기
+function loadFromLocalStorage() {
+  let saved = localStorage.getItem("kanbanData");
+
+  if (!saved) {
+    // 기본 데이터 설정
+    saved = JSON.stringify({
+      "to-do": [
+        { text: "할일 1", checked: false },
+        { text: "할일 2", checked: false },
+      ],
+      "in-progress": [{ text: "할일 3", checked: false }],
+      done: [{ text: "할일 4", checked: false }],
+    });
+
+    localStorage.setItem("kanbanData", saved);
+  }
+
+  const data = JSON.parse(saved);
+
+  Object.keys(data).forEach((columnId) => {
+    const column = document.getElementById(columnId);
+    column.querySelectorAll(".kanban-item").forEach((item) => item.remove());
+
+    data[columnId].forEach(({ text, checked }) => {
+      const newItem = createKanbanItem(text, checked);
+      column.appendChild(newItem);
+    });
   });
 }
