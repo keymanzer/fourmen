@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.highcharts.com/highcharts.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    
+    <div class="container my-5">
+        <h1 class="text-center mb-4">🚗 실시간 교통량 & 소요시간 차트</h1>
+    
+        <div class="row g-4">
+          <!-- 교통량 카드 -->
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div class="card-header bg-primary text-white">
+                교통량 비교 차트
+              </div>
+              <div class="card-body">
+                <div id="traffic-chart"></div>
+              </div>
+            </div>
+          </div>
+    
+          <!-- 소요시간 카드 -->
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div class="card-header bg-success text-white">
+                서울 출발 주요 도시 소요시간
+              </div>
+              <div class="card-body">
+                <div id="time-chart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="my-4 text-end">
+          <a href="../index.html" class="btn btn-danger">메인페이지로 이동</a>
+        </div>
+    </div>
+    <script>
+
+        /*
+        cjunkook	string	전국교통량
+        cjibangDir	string	지방방향 교통량
+        cseoulDir	string	서울방향 교통량
+        csudj	string	서울->대전 소요시간
+        csudg	string	서울->대구 소요시간
+        csuus	string	서울->울산 소요시간
+        csubs	string	서울->부산 소요시간
+        csugj	string	서울->광주 소요시간
+        csump	string	서울->목포 소요시간
+        csukr	string	서울->강릉 소요시간
+
+        csudj_bus	string	서울->대전 버스 소요시간
+        csudg_bus	string	서울->대구 버스 소요시간
+        csuus_bus	string	서울->울산 버스 소요시간
+        csubs_bus	string	서울->부산 버스 소요시간
+        csugj_bus	string	서울->광주 버스 소요시간
+        csump_bus	string	서울->목포 버스 소요시간
+        csukr_bus	string	서울->강릉 버스 소요시간
+
+
+        */
+        // const url = "https://api.odcloud.kr/api/15068863/v1/uddi:2682c872-adbe-4623-9e29-a53467734a88?page=1&perPage=10&returnType=json&serviceKey=jv%2FOTDmJrPn66VLP9pC%2FrMASmEwWItpKnJ62rdUOu5i1j%2Fab%2BC5h9Eu%2BDW6B7S4qLx1TgQcseEigAeem0S5tcQ%3D%3D"
+        const url1 = "https://data.ex.co.kr/openapi/safeDriving/forecast?key=8740149779&type=json"
+        async function getData() {
+            try {
+                const res = await axios.get(url1);
+                const items = res.data.list[0];
+                console.log("데이터 로드 성공~");
+                
+                console.log(items);
+                
+                // x축 정의
+                const trafficX = ['전국 교통량', '지방방향 교통량', '서울방향 교통량'];
+                // y축
+                const trafficY = [Number(items.cjunkook), Number(items.cjibangDir), Number(items.cseoulDir)];
+
+                 // Highcharts 차트 그리기
+                Highcharts.chart('traffic-chart', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: '교통량 비교 차트'
+                },
+                xAxis: {
+                    categories: trafficX,
+                    title: {
+                    text: '구분'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                    text: '교통량 (단위: 대)'
+                    }
+                },
+                series: [{
+                    name: '교통량',
+                    data: trafficY
+                }],
+                tooltip: {
+                    valueSuffix: ' 대'
+                }
+                });
+
+                const timeX = ['대전', '대구', '울산', '부산', '광주', '목포', '강릉'];
+                const timeY = [
+                timeToMinutes(items.csudj),
+                timeToMinutes(items.csudg),
+                timeToMinutes(items.csuus),
+                timeToMinutes(items.csubs),
+                timeToMinutes(items.csugj),
+                timeToMinutes(items.csump),
+                timeToMinutes(items.csukr)
+                ];
+
+                function timeToMinutes(str){
+                    if(!str || !str.includes(':')) return 0;
+                    const [h, m] = str.split(':').map(Number);
+                    return h*60 + m;
+                }
+            
+                Highcharts.chart('time-chart', {
+                    chart: { type: 'line'},
+                    title: { text: '서울 출발 주요 도시 소요시간' },
+                    xAxis: {
+                        categories: timeX,
+                        title: { text: '도시' }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: { text: '소요시간 (분)' }
+                    },
+                    tooltip: { valueSuffix: ' 분' },
+                    series: [{
+                        name: '소요시간',
+                        data: timeY,
+                    }]
+                });
+
+
+            } catch (error) {
+                console.log("데이터 로드 실패...", error);
+                alert('API 호출 실패..ㅠㅠ')
+            }
+        };
+        
+        getData();
+    </script>
+</body>
+</html>
