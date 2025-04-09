@@ -1,9 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body></body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>Canvas Full Example</title>
+  <style>
+    canvas {
+      width: 100%;
+      max-width: 1000px;
+      height: auto;
+      border: 2px solid #333;
+      background-color: #f8f9fa;
+      display: block;
+      margin: 20px auto;
+      cursor: crosshair;
+    }
+    canvas.eraser-cursor {
+      cursor: url('https://cdn-icons-png.flaticon.com/16/748/748137.png') 8 8, auto;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    button {
+      margin: 0 5px;
+      padding: 10px 15px;
+      width : 100px;
+      height: 60px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1e90ff;
+      color: white;
+      cursor: pointer;
+    }
+    button.active {
+      background-color: #ff4d4d;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container controls">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="mt-1">🎨 Canvas</h2>
+      <a href="../index.html" class="btn btn-danger">메인페이지로 이동</a>
+    </div>
+
+    <!-- 버튼 그룹 -->
+    <div class="btn-group mb-3 w-100" role="group">
+      <button id="drawModeBtn" class="btn btn-primary active">그리기</button>
+      <button id="eraserBtn" class="btn btn-primary">지우개</button>
+      <button id="rectBtn" class="btn btn-primary">사각형</button>
+      <button id="circleBtn" class="btn btn-primary">원</button>
+      <button id="clearBtn" class="btn btn-secondary">초기화</button>
+    </div>
+
+    <!-- 설정 영역 -->
+    <div class="row g-2 mb-3">
+      <div class="col-sm-4 col-md-3">
+        <label class="form-label mb-1">그리기 색상</label>
+        <input type="color" class="form-control w-80" id="colorPicker" value="#222222" style="height: 40px;">
+      </div>
+      <div class="col-sm-4 col-md-3">
+        <label class="form-label">브러시/지우개 크기</label>
+        <input type="range" class="form-range" id="sizeSlider" min="1" max="50" value="8" style="height: 1rem;">
+      </div>
+      <div class="col-sm-4 col-md-3">
+        <label class="form-label">도형 크기</label>
+        <input type="range" class="form-range" id="shapeSlider" min="10" max="200" value="50" style="height: 1rem;">
+      </div>
+    </div>
+  </div>
+
+  <!-- 캔버스 -->
+  <canvas id="myCanvas" width="1000" height="600"></canvas>
+
+  <script>
+    // 캔버스 불러오기
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // 상태 변수
+    let isDrawing = false;
+    let mode = 'draw';
+    let lastX = 0;
+    let lastY = 0;
+    let brushSize = 8;
+    let shapeSize = 50;
+    let drawColor = "#222222";
+
+ 
+    const drawBtn = document.getElementById("drawModeBtn");
+    const eraserBtn = document.getElementById("eraserBtn");
+    const rectBtn = document.getElementById("rectBtn");
+    const circleBtn = document.getElementById("circleBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const colorPicker = document.getElementById("colorPicker");
+    const sizeSlider = document.getElementById("sizeSlider");
+    const shapeSlider = document.getElementById("shapeSlider");
+
+    // 모드 변경
+    function setMode(newMode) {
+      mode = newMode;
+      document.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+      canvas.classList.remove('eraser-cursor');
+      canvas.style.cursor = 'crosshair';
+
+      if (mode === 'draw') drawBtn.classList.add('active');
+      if (mode === 'eraser') {
+        eraserBtn.classList.add('active');
+        canvas.classList.add('eraser-cursor');
+      }
+      if (mode === 'rect') {
+        rectBtn.classList.add('active');
+        canvas.style.cursor = 'pointer';
+      }
+      if (mode === 'circle') {
+        circleBtn.classList.add('active');
+        canvas.style.cursor = 'pointer';
+      }
+    }
+
+    drawBtn.onclick = () => setMode('draw');
+    eraserBtn.onclick = () => setMode('eraser');
+    rectBtn.onclick = () => setMode('rect');
+    circleBtn.onclick = () => setMode('circle');
+
+    // 초기화
+    clearBtn.onclick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    // 사용자 설정 반영
+    colorPicker.addEventListener("input", (e) => {
+      drawColor = e.target.value;
+    });
+
+    sizeSlider.addEventListener("input", (e) => {
+      brushSize = parseInt(e.target.value);
+    });
+
+    shapeSlider.addEventListener("input", (e) => {
+      shapeSize = parseInt(e.target.value);
+    });
+
+    // 마우스 동작
+    canvas.addEventListener("mousedown", (e) => {
+      isDrawing = true;
+      lastX = e.offsetX;
+      lastY = e.offsetY;
+
+      if (mode === 'rect') {
+        ctx.fillStyle = drawColor;
+        ctx.fillRect(lastX - shapeSize / 2, lastY - shapeSize / 2, shapeSize, shapeSize);
+        isDrawing = false;
+      } else if (mode === 'circle') {
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, shapeSize / 2, 0, Math.PI * 2);
+        ctx.fillStyle = drawColor;
+        ctx.fill();
+        isDrawing = false;
+      }
+    });
+
+    canvas.addEventListener("mouseup", () => isDrawing = false);
+    canvas.addEventListener("mouseout", () => isDrawing = false);
+
+    canvas.addEventListener("mousemove", (e) => {
+      if (!isDrawing) return;
+      const x = e.offsetX;
+      const y = e.offsetY;
+
+      if (mode === 'draw') {
+        ctx.strokeStyle = drawColor;
+        ctx.lineWidth = brushSize;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      } else if (mode === 'eraser') {
+        ctx.clearRect(x - brushSize / 2, y - brushSize / 2, brushSize, brushSize);
+      }
+
+      lastX = x;
+      lastY = y;
+    });
+  </script>
+</body>
 </html>

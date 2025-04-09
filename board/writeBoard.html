@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h3 class="mb-4 text-center fs-1">📝 게시글 상세</h3>
+    
+        <form id="writeBoard" class="bg-white p-4 rounded shadow-sm">
+          <div class="mb-3">
+            <label class="form-label">제목</label>
+            <input type="text" name="title" class="form-control"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">작성자</label>
+            <input type="text" name="writer" class="form-control"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">내용</label>
+            <textarea name="content" class="form-control" rows="5"></textarea>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button style="margin: 5px;"  type="button" onclick="location.href='./boardList.html'" class="btn btn-warning" id="returnBtn">게시글 목록</button>
+            <button style="margin: 5px;" type="submit" class="btn btn-primary" id="saveBtn">저장</button>
+          </div>
+        </form>
+      </div>
+
+
+    <script>
+        const writeBoard = document.querySelector("#writeBoard");
+
+        writeBoard.addEventListener("submit", e => {
+            e.preventDefault();
+            const title = writeBoard.title.value;
+            const writer = writeBoard.writer.value;
+            const content = writeBoard.content.value;
+
+            console.log(title);
+            console.log(writer);
+            console.log(content);
+            
+            
+            
+            if(!title || !writer || !content){
+                Swal.fire("모든 항목을 입력해 주세요~!");
+                return;
+            }
+
+            post = {
+            title : title,
+            writer : writer,
+            content : content,
+            createdDate : new Date().toLocaleString(),
+            };
+
+            const posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+            posts.push(post);
+            localStorage.setItem("posts" , JSON.stringify(posts));
+            Swal.fire("글이 저장되었습니다!");
+            setTimeout(()=>{
+                location.href = "./boardList.html"
+            }, 3000);
+   
+            
+            writeBoard.reset();
+        });
+        
+   
+    </script>
+</body>
+</html>
