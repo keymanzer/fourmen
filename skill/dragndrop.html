@@ -75,7 +75,7 @@
 </head>
 <body>
   <div class="landscape">
-    <h2> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
+    <h2 style="padding: 20px; font-size:30px;"> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
     <!-- 평평한 땅 -->
     <div class="flat-ground"></div>
 
@@ -118,8 +118,6 @@
 
       // 상자 위치를 집 본체 중앙에 배치
       draggedElement.style.position = "absolute";
-      draggedElement.style.left = dropZoneRect.left + (dropZoneRect.width / 2) - (draggedElement.offsetWidth / 2) + "px";
-      draggedElement.style.top = dropZoneRect.top - draggedElement.offsetHeight + "px";
 
       // 상자를 드롭된 영역 안으로 이동
       dropZone.appendChild(draggedElement);
