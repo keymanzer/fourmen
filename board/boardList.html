@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">📋 게시판</h1>
+        
+        <table id="board" class="table table-bordered table-hover bg-white">
+          <thead class="table-primary">
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>등록일</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <!-- 게시글 목록 삽입 -->
+          </tbody>
+        </table>
+    
+        <div class="text-end">
+          <a href="../index.html" class="btn btn-danger">메인페이지로 이동</a>
+          <a href="./writeBoard.html" class="btn btn-primary">글쓰기</a>
+        </div>
+      </div>
+
+<script>
+    window.onload = function(){
+        tbody = document.querySelector("#tbody");
+        createdHtml = "";
+        const posts = JSON.parse(localStorage.getItem("posts"));
+        if(!posts || posts.length === 0) {
+            createdHtml = `<tr><td colspan="4" class="text-center text-muted">작성된 게시글이 없습니다.</td></tr>`;
+        }
+        else{
+            posts.forEach((item, idx) => {
+                console.log(item.title);
+                
+                // 쿼리스트링으로 넘겨주기.
+                createdHtml += `<tr>
+                                    <td>${idx+1}</td>
+                                    <td><a href = "./boardDetail.html?idx=${idx}">${item.title}</a></td>
+                                    <td>${item.writer}</td>
+                                    <td>${item.createdDate}</td>
+                                    </a>
+                                </tr>`;
+            });
+        }
+        tbody.innerHTML = createdHtml;
+    }
+
+</script>
+</body>
+</html>
