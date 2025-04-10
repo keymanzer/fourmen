@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>드래그 앤 드롭 기능 추가</title>
+  <title>Drag&Drop</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: skyblue;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      /* 파란색 그라데이션 배경 설정 */
+      background: linear-gradient(to top, #4A90E2, #87CEFA); /* 하늘색 그라디언트 */
     }
 
     .landscape {
@@ -71,11 +72,26 @@
       clip-path: polygon(0% 100%, 50% 60%, 100% 100%);
     }
 
+      /* 메시지 박스 스타일 */
+    .message-style {
+      color: blue;
+    }
+  
+    .title {
+        height: 100px;
+        background-color: white;
+    }
+
   </style>
 </head>
 <body>
   <div class="landscape">
-    <h2 style="padding: 20px; font-size:30px;"> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
+    <div class="title">
+       <h2 style="padding: 20px; font-size:30px;"> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
+    </div>
+    <!-- 마우스 클릭 시 새로고침 기능 실행 -->
+    <div id="message" style="padding: 20px;"></div>
+
     <!-- 평평한 땅 -->
     <div class="flat-ground"></div>
 
@@ -116,12 +132,20 @@
       const dropZone = ev.target;
       const dropZoneRect = dropZone.getBoundingClientRect();
 
-      // 상자 위치를 집 본체 중앙에 배치
-      draggedElement.style.position = "absolute";
-
       // 상자를 드롭된 영역 안으로 이동
       dropZone.appendChild(draggedElement);
+      
+      const message = document.getElementById("message"); 
+      message.innerHTML = '<h2>드래그 앤 드랍 완료</h2>';
+      message.setAttribute("class", "message-style");
+      
     }
+
+    // 마우스 클릭 시 리셋
+    window.addEventListener('click', function(){
+      location.reload();
+
+    })
   </script>
 </body>
 </html>
