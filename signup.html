@@ -179,7 +179,7 @@
     <div id="con">
         <div id="login">
             <div id="login_form"><!--로그인 폼-->
-                <form id="loginForm">
+                <form id="signupForm">
                     <h3 class="login" style="letter-spacing:-1px;">회원가입</h3>
 
                     <!-- <p>
@@ -243,22 +243,25 @@
 </body>
 <script>
     function successSignUP() {
-        swal({
+       return swal({
             title: "회원가입 완료!",
             text: document.getElementById('id').value + "님의 가입을 환영합니다!",
             icon: "success",
             button: "확인",
-        });
-
+        }).then(function() { 
+        return true; 
+    });
     }
 
     function errorSignUP() {
-        swal({
+        return swal({
             title: "회원가입 실패!",
             text: "모든 항목을 입력해야 합니다.",
             icon: "error",
             button: "확인",
-        });
+        }).then(function() { 
+        return true; 
+    });
 
     }
     function insertInfo() {
@@ -272,19 +275,20 @@
         } else { return false };
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         if (insertInfo()) {
-            const confirmed = successSignUP();
+            const confirmed = await successSignUP();
             if (confirmed) {
-                document.getElementById("loginForm").submit();
+                document.getElementById("signupForm").submit();
+                window.location.href = 'signin.html'; 
             }
 
         } else {
             errorSignUP();
 
         }
-        document.getElementById("loginForm").reset();
+        document.getElementById("signupForm").reset();
     }
 
 
