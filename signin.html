@@ -212,8 +212,8 @@
         text: document.getElementById('id').value + "님의 방문을 환영합니다!",
         icon: "success",
         button: "확인",
-    }).then(function() { // swal이 완료되면 실행
-        return true; // 성공적으로 로그인하면 true를 반환
+    }).then(function() { 
+        return true; 
     });
 }
 
@@ -237,16 +237,15 @@ function insertInfo() {
 async function handleSubmit(event) {
     event.preventDefault();
     if (insertInfo()) {
-        const confirmed = await successSignIn(); // 성공 메시지가 표시된 후에 '확인' 버튼을 클릭하면 true를 반환
+        const confirmed = await successSignIn(); 
         if (confirmed) {
-            document.getElementById("loginForm").submit();  // 폼 제출
-            window.location.href = 'index.html';  // 페이지 리디렉션
-            console.log("text");  // 성공적으로 '로그인 성공' 메시지를 확인한 후 콘솔에 텍스트가 출력됩니다.
+            document.getElementById("loginForm").submit();  
+            window.location.href = 'index.html';  
         }
     } else {
         errorSignIn();
     }
-    document.getElementById("loginForm").reset();  // 폼 초기화
+    document.getElementById("loginForm").reset(); 
 }
 
 
