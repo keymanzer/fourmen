@@ -41,7 +41,7 @@ animMeter();
         updateHash		: true,
         transitionIn	: 'slideDown',
         transitionOut	: 'slideUp',
-        animationSpeed	: 800,
+        animationSpeed	: 400,
         tabActiveClass	: 'active'}).bind('easytabs:midTransition', function(event, $clicked, $targetPanel){
             if($targetPanel.selector=='#resume'){
                     animMeter();
