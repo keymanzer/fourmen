@@ -45,7 +45,11 @@ function addItemFromModal() {
   const itemText = document.getElementById("modal-input").value.trim();
 
   if (!itemText) {
-    alert("아이템을 입력해주세요!");
+    swal({
+      title: "아이템을 입력해주세요!",
+      icon: "error",
+      button: "확인",
+    });
     return;
   }
 
