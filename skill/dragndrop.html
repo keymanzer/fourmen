@@ -41,6 +41,7 @@
       position: absolute;
       bottom: 50px;
       left: 30%;
+      z-index: 2; /* 상자의 z-index를 2로 설정 */
     }
 
     #grandMother {
@@ -50,6 +51,7 @@
       position: absolute;
       bottom: 50px;
       left: 25%;
+      z-index: 1; /* 할머니의 z-index를 1로 설정 */
     }
 
     /* 집 본체 (상자 드롭 위치) */
@@ -60,19 +62,22 @@
       width: 100px;
       height: 100px;
       background-color: #A9A9A9;
+      z-index: 1; /* 집의 z-index를 1로 설정 */
     }
 
     /* 삼각형 지붕 */
     #roof {
       position: absolute;
-      bottom: 100px;
+      bottom: 150px;
+      right: 50px;
       width: 100px;
       height: 100px;
       background-color: #696969;
       clip-path: polygon(0% 100%, 50% 60%, 100% 100%);
+      z-index: 0; /* 지붕의 z-index를 0으로 설정 */
     }
 
-      /* 메시지 박스 스타일 */
+    /* 메시지 박스 스타일 */
     .message-style {
       color: blue;
     }
@@ -82,13 +87,12 @@
         background-color: white;
     }
 
-
   </style>
 </head>
 <body>
   <div class="landscape">
     <div class="title">
-       <h2 style="padding: 20px; font-size:30px;"> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
+       <h2 style="padding: 20px; font-size:25px; margin:0px;"> 할머니께서 상자가 무거워 옮기기 힘들어하시고 계십니다. 할머니를 도와드려 상자를 집으로 옮겨주세요</h2>
     </div>
 
     <!-- 마우스 클릭 시 새로고침 기능 실행 -->
@@ -105,9 +109,10 @@
 
     <!-- 집 본체 -->
     <div id="house" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
-      <!-- 삼각형 지붕 -->
-      <div id="roof"></div>
     </div>
+
+    <!-- 삼각형 지붕 -->
+    <div id="roof"></div>
 
     <!-- 드래그 앤 드롭 가능한 영역 (평평한 땅의 오른쪽 끝) -->
     <div id="house" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
@@ -141,13 +146,11 @@
       const message = document.getElementById("message"); 
       message.innerHTML = '<h2>드래그 앤 드랍 완료</h2>';
       message.setAttribute("class", "message-style");
-      
     }
 
     // 마우스 클릭 시 리셋
     window.addEventListener('click', function(){
       location.reload();
-
     })
   </script>
 </body>
